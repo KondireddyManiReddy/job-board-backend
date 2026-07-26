@@ -11,11 +11,11 @@ from app.security import (
 )
 
 
+# Do NOT add prefix here
+# main.py already has /users prefix
 router = APIRouter(
-    prefix="/users",
     tags=["Users"]
 )
-
 
 
 # =====================
@@ -35,13 +35,11 @@ def register(
         models.User.email == user.email
     ).first()
 
-
     if existing_user:
         raise HTTPException(
             status_code=400,
             detail="Email already registered"
         )
-
 
     new_user = models.User(
         name=user.name,
@@ -50,19 +48,16 @@ def register(
         role="user"
     )
 
-
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
 
     return new_user
 
 
 
-
 # =====================
-# Login
+# Login User
 # =====================
 
 @router.post(
