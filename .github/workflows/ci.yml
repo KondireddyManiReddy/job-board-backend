@@ -1,23 +1,38 @@
-    - name: Python Syntax Check
-      run: |
-        python -m compileall app
+name: Job Board CI/CD Pipeline
 
-    - name: Install Vercel CLI and uv
-      run: |
-        npm install -g vercel
-        pip install uv
+on:
+  push:
+    branches:
+      - main
 
-    - name: Deploy to Vercel
-      run: |
-        vercel pull --yes \
-        --environment=production \
-        --token=${{ secrets.VERCEL_TOKEN }}
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
 
-        vercel build \
-        --prod \
-        --token=${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-        vercel deploy \
-        --prebuilt \
-        --prod \
-        --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Python Syntax Check
+        run: |
+          python -m compileall app
+
+      - name: Install Vercel CLI and uv
+        run: |
+          npm install -g vercel
+          pip install uv
+
+      - name: Deploy to Vercel
+        run: |
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
