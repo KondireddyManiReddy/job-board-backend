@@ -6,13 +6,18 @@ on:
       - main
 
 jobs:
-  deploy:
+
+  build-test-deploy:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: .
+
     steps:
 
-    - name: Checkout
+    - name: Checkout Code
       uses: actions/checkout@v4
 
 
@@ -27,12 +32,16 @@ jobs:
         pip install -r requirements.txt
 
 
-    - name: Python Check
+    - name: Python Syntax Check
       run: |
-        python -m compileall .
+        python -m compileall app
 
 
-    - name: Deploy Vercel
+    - name: Install Node and Vercel CLI
       run: |
         npm install -g vercel
+
+
+    - name: Deploy to Vercel
+      run: |
         vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
