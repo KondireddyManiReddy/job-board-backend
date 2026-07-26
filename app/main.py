@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 
-# Use app. prefix for Vercel deployment
-from app.database import engine
-from app import models
+
 
 # Import your routers (if you have them)
 from app.routers import users, jobs, applications
