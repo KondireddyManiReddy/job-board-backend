@@ -7,29 +7,44 @@ on:
 
 jobs:
   build-test-deploy:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Code
         uses: actions/checkout@v4
+
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
+
 
       - name: Python Syntax Check
         run: |
           python -m compileall app
 
-      - name: Install Vercel CLI and uv
+
+      - name: Install Vercel CLI
         run: |
           npm install -g vercel
-          pip install uv
+
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+
+      - name: Check uv installation
+        run: |
+          uv --version
+
 
       - name: Deploy to Vercel
         run: |
