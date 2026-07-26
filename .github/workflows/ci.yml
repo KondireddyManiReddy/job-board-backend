@@ -6,14 +6,13 @@ on:
       - main
 
 jobs:
-
   build-test-deploy:
 
     runs-on: ubuntu-latest
 
     steps:
 
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v4
 
     - name: Setup Python
@@ -21,15 +20,17 @@ jobs:
       with:
         python-version: "3.11"
 
-    - name: Install dependencies
+    - name: Install Dependencies
       run: |
         pip install -r requirements.txt
 
-    - name: Check Python syntax
+    - name: Python Syntax Check
       run: |
-        python -m compileall .
+        python -m compileall app
 
     - name: Deploy to Vercel
       run: |
         npm install -g vercel
-        vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+        vercel pull --yes --token ${{ secrets.VERCEL_TOKEN }}
+        vercel build --prod --token ${{ secrets.VERCEL_TOKEN }}
+        vercel deploy --prebuilt --prod --token ${{ secrets.VERCEL_TOKEN }}
