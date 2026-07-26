@@ -6,6 +6,7 @@ on:
       - main
 
 jobs:
+
   build-test-deploy:
 
     runs-on: ubuntu-latest
@@ -36,7 +37,7 @@ jobs:
           python -m compileall app
 
 
-      - name: Install Vercel CLI
+      - name: Install Node and Vercel CLI
         run: |
           npm install -g vercel
 
@@ -45,13 +46,12 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
 
-      - name: Check uv installation
+      - name: Verify uv
         run: |
           uv --version
 
 
       - name: Deploy to Vercel
-        working-directory: backend
         run: |
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
