@@ -5,7 +5,7 @@ from app.database import engine
 from app import models
 
 # Import your routers (if you have them)
-from app.routes import users, jobs, applications
+from app.routers import users, jobs, applications
 
 
 app = FastAPI(
