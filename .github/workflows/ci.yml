@@ -1,4 +1,4 @@
-name: Job Board CI Pipeline
+name: Job Board CI/CD Pipeline
 
 on:
   push:
@@ -9,8 +9,10 @@ on:
     branches:
       - main
 
+
 jobs:
-  test:
+
+  test-and-deploy:
 
     runs-on: ubuntu-latest
 
@@ -19,15 +21,29 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: "3.11"
 
+
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
 
+
     - name: Check Python files
       run: |
         python -m compileall .
+
+
+    - name: Install Vercel CLI
+      run: |
+        npm install -g vercel
+
+
+    - name: Deploy to Vercel
+      if: github.ref == 'refs/heads/main'
+      run: |
+        vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
